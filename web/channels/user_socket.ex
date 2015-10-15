@@ -3,7 +3,6 @@ defmodule Friends.UserSocket do
 
   ## Channels
   channel "friends:leaderboard", Friends.LeaderboardChannel
-  channel "friends:follower", Friends.FollowerChannel
   channel "friends:person", Friends.PersonChannel
 
   ## Transports

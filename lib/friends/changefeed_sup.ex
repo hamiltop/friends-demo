@@ -11,6 +11,10 @@ defmodule Friends.ChangefeedSup do
         Friends.LeaderboardChangefeed,
         [Friends.Database, [name: Friends.LeaderboardChangefeed]]
       ),
+      worker(
+        Friends.PeopleChangefeed,
+        [Friends.Database, [name: Friends.PeopleChangefeed]]
+      ),
       supervisor(Friends.PersonChangefeedSup, []),
       supervisor(Friends.FollowersChangefeedSup, [])
     ]

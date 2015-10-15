@@ -25,6 +25,7 @@ defmodule Friends.PersonChangefeed do
     end)
     {:next, state}
   end
+
   def handle_update(%{"new_val" => update}, state = %{pid: pid}) do
     send pid, {:new_person_val, Person.parse(update)}
     {:next, state}

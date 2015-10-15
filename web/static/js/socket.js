@@ -69,7 +69,7 @@ channel.on("new_board", payload => {
 })
 
 var id = $(".person").first().data("id")
-let followerChannel = socket.channel("friends:follower", {id: id})
+let followerChannel = socket.channel("friends:person", {id: id})
 
 followerChannel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
@@ -92,19 +92,37 @@ followerChannel.on("lost_follower", data => {
   }, 5000)
 })
 
-var following = $(".following ul")
+var following = $(".following .list")
 
 followerChannel.on("new_following", payload => {
   var new_list = payload.data.map( entry => {
-    return "<li>" + entry.name + 
-            "<button class=\"unfollow\" data-id=\"" + entry.id +"\">Unfollow</button>"
-            + "</li>\n"
+    return "<div>"
+            + "<span class=\"col-lg-6\">" + entry.name + "</span>"
+            + "<button class=\"unfollow col-lg-pull-6\" data-id=\"" + entry.id +"\">Unfollow</button>"
+            + "</div>"
   }).join("\n")
   following.html(new_list);
   $(".unfollow").on("click", event => {
     var id = $(event.target).data("id")
     followerChannel.push("unfollow", {id: id})
     console.log("Unfollow " + id)
+  })
+})
+
+var world = $(".world .list")
+
+followerChannel.on("new_world", payload => {
+  var new_list = payload.data.map( entry => {
+    return "<div>"
+            + "<span class=\"col-lg-6\">" + entry.name + "</span>"
+            + "<button class=\"follow col-lg-pull-6\" data-id=\"" + entry.id + "\">Follow</button>"
+            + "</div>"
+  }).join("\n")
+  world.html(new_list);
+  $(".follow").on("click", event => {
+    var id = $(event.target).data("id")
+    followerChannel.push("follow", {id: id})
+    console.log("Follow " + $(event.target).data("id"))
   })
 })
 

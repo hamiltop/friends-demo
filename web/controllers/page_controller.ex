@@ -11,17 +11,24 @@ defmodule Friends.PageController do
         redirect conn, to: "/" <> person.id 
       id ->
         board = Friends.LeaderboardChangefeed.get || []
-        person = Person.get(id, Friends.Database)
+        person = Person.get(id)
         following = Person.get_all_following(person)
         result = Person.get_all_followers_and_strangers(person)
         strangers = Dict.get(result, :strangers, [])
         followers = Dict.get(result, :followers, [])
+        people = Person.get_all
+        people = Enum.reject(people, fn(p) ->
+          Enum.find(person.friends, fn(x) ->
+            p.id == x || person.id == p.id
+          end)
+        end)
         render conn, "index.html",
           board: board,
           person: person,
           following: following,
           followers: followers,
-          strangers: strangers
+          strangers: strangers,
+          people: people
     end      
   end
 end

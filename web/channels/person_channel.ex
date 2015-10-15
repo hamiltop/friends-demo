@@ -1,12 +1,16 @@
-defmodule Friends.FollowerChannel do
+defmodule Friends.PersonChannel do
   use Phoenix.Channel
+
+  intercept ["new_world"]
 
   alias Friends.Person
   require Logger
 
-  def join("friends:follower", %{"id" => id}, socket) do
-    {:ok, _} = Friends.FollowersChangefeedSup.start_child(Friends.Database, self, id)
-    {:ok, _} = Friends.PersonChangefeedSup.start_child(Friends.Database, self, id)
+  def join("friends:person", %{"id" => id}, socket) do
+    {:ok, pid} = Friends.FollowersChangefeedSup.start_child(Friends.Database, self, id)
+    Process.link(pid)
+    {:ok, pid} = Friends.PersonChangefeedSup.start_child(Friends.Database, self, id)
+    Process.link(pid)
     person = Person.get(id)
     {:ok, assign(socket, :person, person)}
   end
@@ -21,6 +25,20 @@ defmodule Friends.FollowerChannel do
     person = socket.assigns[:person]
     person = Person.add_follower(person, id)
     {:noreply, assign(socket, :person, person)}
+  end
+
+  def handle_out("new_world", %{data: people}, socket) do
+    person = socket.assigns[:person]
+    friends = person.friends
+    people = Enum.reject(people, fn (p) ->
+      Enum.find(friends, fn (x) ->
+        x == p["id"] || person.id == p["id"]
+      end)
+    end) |> Enum.map(fn (p) ->
+      Dict.take(p, ["id", "name"])
+    end)
+    push socket, "new_world", %{data: people}
+    {:noreply, socket}
   end
 
   def handle_info({:new_follower, p}, socket) do
