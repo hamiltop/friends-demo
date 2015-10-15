@@ -33,7 +33,7 @@ defmodule Friends.Mixfile do
      {:phoenix_html, "~> 2.1"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
-     {:rethinkdb, path: "../rethinkdb-elixir"},
+     {:rethinkdb, github: "hamiltop/rethinkdb-elixir"},
      {:exrm, "~> 0.19"}
      ]
   end

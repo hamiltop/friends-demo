@@ -15,4 +15,5 @@
   "poison": {:hex, :poison, "1.5.0"},
   "providers": {:hex, :providers, "1.4.1"},
   "ranch": {:hex, :ranch, "1.1.0"},
-  "relx": {:hex, :relx, "3.5.0"}}
+  "relx": {:hex, :relx, "3.5.0"},
+  "rethinkdb": {:git, "https://github.com/hamiltop/rethinkdb-elixir.git", "bd5fbd145f48def097dae5ab23be195ecad144f6", []}}
