@@ -19,8 +19,8 @@ defmodule Friends.PageController do
         people = Person.get_all
         people = Enum.reject(people, fn(p) ->
           Enum.find(person.friends, fn(x) ->
-            p.id == x || person.id == p.id
-          end)
+            p.id == x
+          end) || person.id == p.id
         end)
         render conn, "index.html",
           board: board,

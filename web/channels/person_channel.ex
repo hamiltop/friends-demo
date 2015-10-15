@@ -32,11 +32,11 @@ defmodule Friends.PersonChannel do
     friends = person.friends
     people = Enum.reject(people, fn (p) ->
       Enum.find(friends, fn (x) ->
-        x == p["id"] || person.id == p["id"]
+        x == p["id"]
       end)
     end) |> Enum.map(fn (p) ->
       Dict.take(p, ["id", "name"])
-    end)
+    end) || person.id == p["id"]
     push socket, "new_world", %{data: people}
     {:noreply, socket}
   end
