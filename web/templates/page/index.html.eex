@@ -1,0 +1,50 @@
+<div class="jumbotron">
+  <h2>Friends!</h2>
+  <p class="lead">A Massively Multiplayer RethinkDB Demo</p>
+</div>
+
+<div class="row person" data-id="<%= @person.id %>">
+  <h3>Hello, <%= @person.name %></h3>
+</div>
+<div class="row marketing">
+  <div class="col-lg-6 leaderboard">
+    <h4>Leader Board</h4>
+    <ul>
+      <%= for p <- @board do %>
+        <li>
+          <%= p["name"] %> is following <%= p["friend_count"] %> people.
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="col-lg-6 following">
+    <h4>People you currently follow</h4>
+    <ul>
+      <%= for p <- @following do %>
+        <li>
+          <%= p.name %>
+          <button class="unfollow" data-id="<%= p.id %>">Unfollow</button>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="col-lg-6">
+    <h4>People you are not currently following</h4>
+    <ul>
+      <%= for p <- @strangers do %>
+        <li>
+          <%= p.name %>
+          <button class="follow" data-id="<%= p.id %>">Follow</button>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="col-lg-6 messages">
+    <h4>Messages:</h4>
+    <ul>
+    </ul>
+  </div>
+</div>
